@@ -3,14 +3,16 @@ const dotenv = require("dotenv").config()
 const mongoose = require('mongoose')
 const cors = require('cors')
 const bodyParser = require('body-parser')
-
 const userRoute = require('./routes/userRoute')
+const errorHandler = require('./middleWare/errorMiddleware')
+const cookieParser = require('cookie-parser')
 const app = express()
 // Middlewares
 app.use(express.json())
 app.use(express.urlencoded({
     extended:false
 }))
+app.use(cookieParser())
 app.use(bodyParser.json())
 // routes Middleware
 app.use('/api/users', userRoute)
@@ -21,7 +23,10 @@ app.get('/',(req,res)=>{
 
 const PORT = process.env.PORT || 5000;
 
-// connect t mongoDb
+// error handler
+app.use(errorHandler)
+
+// connect to mongoDb
 mongoose
        .connect(process.env.MONGO_URI)
        .then(()=>{
