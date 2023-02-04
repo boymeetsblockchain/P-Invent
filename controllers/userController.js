@@ -3,6 +3,7 @@ const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
+const { use } = require('../routes/userRoute')
 const generateToken =(id)=>{
   return jwt.sign({id},process.env.JWT_SECRET,{expiresIn:"1d"})
 }
@@ -163,7 +164,57 @@ const logOut=asyncHandler(async(req,res)=>{
  })
 
  const updateUser = asyncHandler(async(req,res)=>{
-  res.send("update user")
+   const user = await User.findById(req.user._id)
+   if(user){
+    const { name, email, photo, phone, bio } = user;
+     user.email = email;
+     user.name = req.body.name || name;
+     user.phone = req.body.phone || phone;
+     user.bio= req.body.bio || bio;
+     user.photo = req.body.photo || photo;
+     
+
+     const updatedUser = await user.save()
+     res.status(200).json({
+      _id:updatedUser._id,
+      name :updatedUser.name,
+      photo :updatedUser.photo,
+      phone :updatedUser.phone,
+      bio : updatedUser.bio
+     })
+   }else{
+    res.status(400)
+    throw new Error("user not found")
+   }
+ })
+
+ const changePassword = asyncHandler(async(req,res)=>{
+  const user = await User.findById(req.user._id)
+
+  const {oldPassword, password}= req.body
+ if(!user){
+  res.status(400)
+  throw new Error ("User not found, please signup")
+ }
+  //  validate password
+  if(!oldPassword){
+    res.status(400)
+    throw new Error("please fill in a Old password and new Password")
+  }
+
+  // check if old password matches password in the db
+  const passwordIsCorecct = await bcrypt.compare(oldPassword,user.password)
+  // save new password
+  if(user && passwordIsCorecct){
+    user.password =password
+    await user.save()
+    res.status(200).send("password changed successfully")
+
+  }else {
+    res.status(400)
+    throw new Error(" Old password is incorrect")
+  }
+  
  })
 mongoose.set('strictQuery', true);
 
@@ -173,5 +224,6 @@ module.exports = {
   logOut,
   getUser,
   loginStatus,
-  updateUser
+  updateUser,
+  changePassword
 };
