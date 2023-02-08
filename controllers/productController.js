@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+
 const asyncHandler = require('express-async-handler')
 const Product = require("../models/productModel");
 const { fileSizeFormatter } = require("../utils/fileUpload");

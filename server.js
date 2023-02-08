@@ -5,6 +5,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const userRoute = require('./routes/userRoute')
 const productRoute = require('./routes/productRoute')
+const contactRoute = require('./routes/contactRoute')
 const errorHandler = require('./middleWare/errorMiddleware')
 const cookieParser = require('cookie-parser')
 const path = require('path')
@@ -20,6 +21,7 @@ app.use(cors())
 
 // routes Middleware
 app.use('/api/users', userRoute)
+app.use('/api/contactus', contactRoute)
 app.use('/api/products', productRoute)
 
 // Routes
