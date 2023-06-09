@@ -10,19 +10,20 @@ const errorHandler = require('./middleWare/errorMiddleware')
 const cookieParser = require('cookie-parser')
 const path = require('path')
 const app = express()
+
+
 // Middlewares
 app.use(express.json())
 app.use(express.urlencoded({
-    extended:false
+    extended: false
 }))
 app.use(cookieParser())
 app.use(bodyParser.json())
-app.use(cors(
-    {
-        origin:["https://p-invent-boymeetsblockchain.vercel.app/",''],
-        credentials:true
-    }
-))
+app.use(cors({
+    origin: ["https://p-invent-boymeetsblockchain.vercel.app/"],
+    credentials: true
+}))
+
 
 // routes Middleware
 app.use('/api/users', userRoute)
