@@ -19,7 +19,7 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(cors(
     {
-        origin:["http://localhost:3000",''],
+        origin:["https://p-invent-boymeetsblockchain.vercel.app/",''],
         credentials:true
     }
 ))
@@ -43,7 +43,7 @@ app.use(errorHandler)
 
 // connect to mongoDb
 mongoose
-       .connect(process.env.MONGO_URI)
+       .connect(process.env.MONGO_URL)
        .then(()=>{
         app.listen(PORT, ()=>{
             console.log(`server running on port ${PORT}`)
